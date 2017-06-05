@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+{% load static %}
+
+{%block menu%}
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+
+
+        {% if request.user.is_authenticated %}
+        <li><a href="#recurso">AGREGAR RECURSO</a></li>
+        <li><a href="#playlist">CREAR PLAYLIST</a></li>
+        <li><a href="#perfil"><span class="glyphicon glyphicon-user"></span> {{ request.user.nombre|upper }}</a></li>
+        <li><a href="{% url 'landing:logout' %}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;SALIR</a></li>
+        {% else%}
+        <li><a href="#main">PRINCIPALES</a></li>
+        <li><a href="#busqueda">BUSCAR</a></li>
+        <li><a href="#destacados">DESTACADOS</a></li>
+        <li><a href="#" data-toggle="modal" id="myBtn">INICIAR SESIÓN</a></li>
+        <li><a href="#" data-toggle="modal_s" id="myBtn_s">CREAR CUENTA</a></li>
+        {% endif%}
+
+      </ul>
+    </div>
+{%endblock%}
+
+
+{% block content %}
+<div class="jumbotron text-center">
+  <h1>Bienvenido</h1>
+
+  <p>Estás en el lugar adecuado</p>
+  <form>
+    <!-- <div class="input-group">
+      <input type="email" class="form-control" size="50" placeholder="Email Address" required>
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-danger">Subscribe</button>
+      </div>
+    </div> -->
+  </form>
+</div>
+
+
+<!-- Container (About Section) -->
+<div id="about" class="container-fluid">
+  <div class="row">
+    <div class="col-sm-8">
+      <h2>Acerca de nosotros</h2><br>
+      <h4>Somos un grupo de desarrolladores con la intención de facilitar el camino de aprendizaje a los que le interesa aprender a programar o ya saben y quieren aprender nuevas cosas:.</h4><br>
+      <h4>Nos dimos a la tarea de buscar todos los recursos en linea para programar y seleccionar los mejores para agilizar tu proceso de aprendizaje y evitar la frustracion que genera la gran cantidad de recursos y la incertidumbre de no saber si estas tomando el camino adecuado.</h4>
+      <br><!--<button class="btn btn-default btn-lg">Get in Touch</button>-->
+    </div>
+    <div class="col-sm-4">
+      <span class="glyphicon glyphicon-signal logo"></span>
+    </div>
+  </div>
+</div>
+<!-- destacados-->
+
+<!--busqueda-->
+<div id="busqueda" class="jumbotron text-center">
+  <h1>Buscar</h1>
+  <p>¿Que quieres aprender?</p>
+  <form class="form" method="POST" action="{%url 'landing:search'%}">
+    {% csrf_token %}
+    <div class="col-2 col-sm-2 col-md-2">
+    </div>
+    <div class="col-8 col-sm-8 col-md-8">
+      <div class="input-group">
+        <input type="text" class="form-control" name="q" size="100" placeholder="aprenderé..." required>
+        <div class="input-group-btn">
+          <input type="submit" class="btn btn-danger" value="BUSCAR"> 
+        </div>
+      </div>
+    </div>
+    <div class="col-2 col-sm-2 col-md-2">
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="col-4 col-sm-4 col-md-4">
+      <div class="form-group">
+        <label for="sel1">Lenguaje</label>
+        <select class="form-control" id="sel1" name="lenguaje" required>
+          <option>Python</option>
+          <option>Javascript</option>
+          <option>Java</option>
+          <option>C++</option>
+          <option>C#</option>
+          <option>PHP</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-4 col-sm-4 col-md-4">
+      <div class="form-group">
+        <label for="sel1">Nivel</label>
+        <select class="form-control" name="nivel" required>
+          <option>Basico</option>
+          <option>Intermedio</option>
+          <option>Avanzado</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-4 col-sm-4 col-md-4">
+      <div class="form-group">
+        <label for="sel1">Tipo</label>
+        <select class="form-control" name="tipo">
+          <option>Video</option>
+          <option>URL</option>
+          <option>PDF</option>
+          <option>eBook</option>
+        </select>
+      </div>
+    </div>
+  </form>
+  <br><br><br><br><br><br><br>
+</div>
+
+<!-- Container (Playlist Section) -->
+<div id="playlist" class="container-fluid bg-grey">
+  <h2 class="text-center">CREAR PLAYLIST</h2>
+  <form action="{% url 'landing:add_playlist' %}" method="POST">
+    {% csrf_token %}
+    {{ form.errors }}  
+  <div class="row">
+    <div class="col-sm-12 slideanim">
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <label>Nombre</label>
+        {{playlist.nombre}}
+        </div>
+        <div class="form-group col-sm-5">
+          <label>Agregar</label>
+          {{playlist.playlist_recurso}}
+        </div>
+      </div>
+       <div class="row">
+        <div class="col-sm-10 form-group">
+          <button class="btn btn-default pull-right" type="submit">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br><br><br><br><br><br><br>
+  </form>
+</div>
+
+<!-- Container (Recurso Section) -->
+<div id="recurso" class="container-fluid">
+<h2 class="text-center">CREAR RECURSO</h2>
+  <form action="{% url 'landing:add_recurso' %}" method="POST">
+    {% csrf_token %}
+  <div class="row">
+    <div class="col-sm-12 slideanim">
+      <div class="row">
+        <div class="form-group col-sm-5">
+          <label>Titulo</label>
+        {{recurso.titulo}}
+        </div>
+        <div class="form-group col-sm-5">
+          <label>Lenguaje</label>
+        {{recurso.lenguaje}}
+        </div>
+        <div class="form-group col-sm-5">
+          <label>Tipo</label>
+        {{recurso.tipo}}
+        </div>
+        <div class="form-group col-sm-5">
+          <label>Nivel</label>
+        {{recurso.nivel}}
+        </div>
+        <div class="form-group col-sm-5">
+          <label>Me gusta</label>
+        {{recurso.es_favorito}}
+        </div>
+        
+        
+        <div class="form-group col-sm-5">
+          <label>Url</label>
+          {{recurso.url}}
+        </div>
+      </div>
+       <div class="row">
+        <div class="form-group col-sm-10">
+          <button class="btn btn-default pull-right" type="submit">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:20px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="login-title"><span class="glyphicon glyphicon-lock"></span> INICIAR SESIÓN</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" action="{% url 'landing:login' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="email"><span class="glyphicon glyphicon-user"></span> Email</label>
+              {{login.email}}
+            </div>
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Contraseña</label>
+              {{login.password}}
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" value="" checked>Remember me</label>
+            </div>
+              <button type="submit" class="btn btn-login btn-block"><span class="glyphicon glyphicon-log-in"></span> Iniciar</button>
+          </form>
+        </div>
+        <!--div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+          <p>Not a member? <a href="#">Sign Up</a></p>
+          <p>Forgot <a href="#">Password?</a></p>
+        </div-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--login-->
+<!--sign in-->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="myModal_s" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header" style="padding:20px 50px;">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="login-title"><span class="glyphicon glyphicon-lock"></span> CREAR CUENTA</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+          <form role="form" action="{% url 'landing:sign' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="nombre"><span class="glyphicon glyphicon-user"></span> Nombre</label>
+              {{sign.nombre}}
+            </div>
+            <div class="form-group">
+              <label for="apellido_paterno"><span class="glyphicon glyphicon-user"></span> Apellido paterno</label>
+              {{sign.apellido_paterno}}
+            </div>
+            <div class="form-group">
+              <label for="email"><span class="glyphicon glyphicon-user"></span> Email</label>
+              {{sign.email}}
+            </div>
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Contraseña</label>
+              {{sign.password}}
+            </div>
+            <div class="form-group">
+              <label for="psw"><span class="glyphicon glyphicon-eye-open"></span>Confirma tu contraseña</label>
+              {{sign.confirm_password}}
+            </div>
+              <button type="submit" class="btn btn-login btn-block"><span class="glyphicon glyphicon-list-alt"></span> Crear</button>
+          </form>
+        </div>
+        <!--div class="modal-footer">
+          <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+          <p>Not a member? <a href="#">Sign Up</a></p>
+          <p>Forgot <a href="#">Password?</a></p>
+        </div-->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Container (Perfil Section) -->
+<div id="perfil" class="container-fluid">
+<h2 class="text-center">PERFIL</h2>
+  <div class="row">
+
+    <div class="col-sm-4">
+      <ul class="list-group">
+        <li class="list-group-item label-success">PLAYLIST</li>
+      {% for playlist in playlists %}
+        <li class="list-group-item">{{playlist.nombre}} 
+        <a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Me gusta</a> 
+        <a href="#"><span class="glyphicon glyphicon-thumbs-down"></span> No Me gusta</a> 
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+
+
+     <div class="col-sm-4">
+      <ul class="list-group">
+        <li class="list-group-item">FAVORITOS</li>
+      {% for favorito in favoritos %}
+        <li class="list-group-item">{{favorito.nombre}} 
+        <a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Me gusta</a> 
+        <a href="#"><span class="glyphicon glyphicon-thumbs-down"></span> No Me gusta</a> 
+        </li>      
+      {% endfor %}
+      </ul>
+    </div>
+
+
+    <div class="col-sm-4">
+      <ul class="list-group">
+        <li class="list-group-item">HISTORIAL</li>
+      {% for historial in historiales %}
+        <li class="list-group-item">{{historial.nombre}} 
+        <a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Me gusta</a> 
+        <a href="#"><span class="glyphicon glyphicon-thumbs-down"></span> No Me gusta</a> 
+        </li>      
+      {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!--sign in-->
+
+
+
+<script>
+$(document).ready(function(){
+    $("#myBtn").click(function(){
+        $("#myModal").modal();
+    });
+    $("#myBtn_s").click(function(){
+        $("#myModal_s").modal();
+    });
+});
+</script>
+
+{% endblock %}

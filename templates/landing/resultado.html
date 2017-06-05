@@ -1,0 +1,63 @@
+{% extends 'base.html'%}
+
+
+{%block menu%}
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+
+
+        {% if request.user.is_authenticated %}
+        <li><a href="#recurso">AGREGAR RECURSO</a></li>
+        <li><a href="#playlist">CREAR PLAYLIST</a></li>
+        <li><a href="#perfil"><span class="glyphicon glyphicon-user"></span> {{ request.user.nombre|upper }}</a></li>
+        <li><a href="{% url 'landing:logout' %}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;SALIR</a></li>
+        {% else%}
+        <li><a href="#main">PRINCIPALES</a></li>
+        <li><a href="#busqueda">BUSCAR</a></li>
+        <li><a href="#destacados">DESTACADOS</a></li>
+        <li><a href="#" data-toggle="modal" id="myBtn">INICIAR SESIÓN</a></li>
+        <li><a href="#" data-toggle="modal_s" id="myBtn_s">CREAR CUENTA</a></li>
+        {% endif%}
+
+      </ul>
+    </div>
+{%endblock%}
+
+
+{%block content%}
+<!-- Container (Resultado Section) -->
+<div id="resultado" class="container-fluid">
+<h2 class="text-center">Resultado</h2>
+  <div class="row">
+    <div class="col-sm-12">
+      <ul class="list-group">
+      {% if recursos %}    
+      {% for recurso in recursos %}
+        <li class="list-group-item">
+            <a target="_blank" href="{{recurso.url}}">
+                <strong>{{recurso.titulo}}</strong> 
+            </a> 
+        &nbsp;&nbsp;&nbsp;<a href="#"><span class="glyphicon glyphicon-thumbs-up"></span> Me gusta</a> 
+        &nbsp;&nbsp;&nbsp;<a href="#"><span class="glyphicon glyphicon-thumbs-down"></span> No Me gusta</a> 
+        &nbsp;&nbsp;&nbsp;<a href="#"><span class="glyphicon glyphicon-plus"></span> Agregar a playlist</a> 
+        </li>      
+      {% endfor %}
+      {%else%}
+      <p>
+            No se han encontrado resultados para tu búsqueda.
+
+            Sugerencias:
+            <ul>    
+                <li>Asegúrate de que todas las palabras estén escritas correctamente.</li>
+                <li>Prueba diferentes palabras clave.</li>
+                <li>Prueba palabras clave más generales.</li>
+            </ul>
+      </p>
+      {%endif%}
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+{%endblock%}
