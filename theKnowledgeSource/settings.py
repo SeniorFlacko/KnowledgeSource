@@ -25,7 +25,7 @@ SECRET_KEY = 'atf!-m#+jz&)_d$mg-*4##w95*z+x9_xzb!6qoutc7n3=4)u!z'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['knowledge-source.herokuapp.com',]
+ALLOWED_HOSTS = ['knowledge-source.herokuapp.com','0.0.0.0']
 
 
 # Application definition
